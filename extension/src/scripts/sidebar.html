@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Focus Points Sidebar</title>
+    <style nonce>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            color: #333;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .ring-chart {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            background: conic-gradient(#ff6347 0, #ff6347 50%, #87cefa 50%);
+            border-radius: 50%;
+            margin: 10px;
+        }
+        .ring-chart::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 60px;
+            height: 60px;
+            background: #f0f0f0;
+            border-radius: 50%;
+        }
+        .percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+        }
+        .focus-label {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .message {
+            font-size: 16px;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h2>Focus Analysis Results</h2>
+    <div class="chart-container">
+        <div>
+            <div id="chart1" class="ring-chart">
+                <div class="percentage" id="percentage1">50%</div>
+            </div>
+            <div class="focus-label">Focus Point 1</div>
+        </div>
+        <div>
+            <div id="chart2" class="ring-chart">
+                <div class="percentage" id="percentage2">50%</div>
+            </div>
+            <div class="focus-label">Focus Point 2</div>
+        </div>
+        <div>
+            <div id="chart3" class="ring-chart">
+                <div class="percentage" id="percentage3">50%</div>
+            </div>
+            <div class="focus-label">Focus Point 3</div>
+        </div>
+    </div>
+    <div id="message" class="message">Encouragement message goes here.</div>
+
+    <script nonce>
+        // Example data fetching logic; replace this with real data in production
+        document.addEventListener('DOMContentLoaded', () => {
+            chrome.runtime.onMessage.addListener((data) => {
+                if (data.type === 'focusData') {
+                    document.getElementById('percentage1').textContent = `${data.focus_point_1_percentage}%`;
+                    document.getElementById('percentage2').textContent = `${data.focus_point_2_percentage}%`;
+                    document.getElementById('percentage3').textContent = `${data.focus_point_3_percentage}%`;
+                    
+                    document.getElementById('chart1').style.background = `conic-gradient(#ff6347 0 ${data.focus_point_1_percentage}%, #87cefa ${data.focus_point_1_percentage}% 100%)`;
+                    document.getElementById('chart2').style.background = `conic-gradient(#ff6347 0 ${data.focus_point_2_percentage}%, #87cefa ${data.focus_point_2_percentage}% 100%)`;
+                    document.getElementById('chart3').style.background = `conic-gradient(#ff6347 0 ${data.focus_point_3_percentage}%, #87cefa ${data.focus_point_3_percentage}% 100%)`;
+                    
+                    document.getElementById('message').textContent = data.message;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
